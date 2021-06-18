@@ -6,7 +6,8 @@ public interface Competitor {
     void run(int dist);
     void swim(int dist);
     void jump(int height);
-    void crawl(CooperPipe cooperPipe);
+    void crawl(int pipeWidth);
+    void fire(int fireRadius);
     boolean isOnDistance();
-    void info();
+    void printInfo();
 }

@@ -4,14 +4,21 @@ import HomeWork_01.Marathon.Competitor;
 import HomeWork_01.Obstacles.Base.Obstacle;
 
 public class Fire extends Obstacle {
-    int length;
+    int radius;
 
     public Fire(int length) {
-        this.length = length;
+        this.radius = length;
+        this.type = "Огненный лес";
+
     }
 
     @Override
     public void doIt(Competitor competitor) {
-        competitor.run(length);
+        competitor.fire(radius);
+    }
+
+    @Override
+    public void presentation() {
+        System.out.println("О нет! Горящий лес! Нужно пройти сквозь него. Радиус пожара " + radius + " м.\n");
     }
 }

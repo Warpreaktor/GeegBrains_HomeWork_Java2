@@ -6,9 +6,10 @@ import HomeWork_01.Obstacles.Base.Obstacle;
 import java.util.Random;
 
 public class CooperPipe extends Obstacle {
-    private PipeAngle[] pipeAngles; //количество поворотов в трубе
+    private PipeAngle[] pipeAngles; //количество изгибов в трубе
 
     public CooperPipe(int angles) {
+        this.type = "Медные трубы";
         pipeAngles = new PipeAngle[angles];
         for (int i = 0; i < pipeAngles.length; i++) {
             pipeAngles[i] = new PipeAngle();
@@ -17,15 +18,23 @@ public class CooperPipe extends Obstacle {
 
     @Override
     public void doIt(Competitor competitor) {
-        competitor.crawl(this);
+        for (PipeAngle pipeAngle : pipeAngles) {
+            competitor.crawl(pipeAngle.pipeWidth);
+        }
     }
 
-    private class PipeAngle {
-        int anglesDegree;  //угол поворота
+    public class PipeAngle {
+        int pipeWidth;  //Ширина трубы
 
         public PipeAngle() {
             Random random = new Random();
-            this.anglesDegree = 60 + random.nextInt(140);
+            this.pipeWidth = 60 + random.nextInt(140);
         }
+
+    }
+
+    @Override
+    public void presentation() {
+        System.out.println("Впереди " + type + " посмотрим что там внутри\n");
     }
 }

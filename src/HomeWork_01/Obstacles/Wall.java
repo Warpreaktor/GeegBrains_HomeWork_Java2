@@ -8,10 +8,17 @@ public class Wall extends Obstacle {
 
     public Wall(int height) {
         this.height = height;
+        this.type = "Стена";
+
     }
 
     @Override
     public void doIt(Competitor competitor) {
         competitor.jump(height);
+    }
+
+    @Override
+    public void presentation() {
+        System.out.println("Перед участниками стена высотой в " + height + " м.\n");
     }
 }

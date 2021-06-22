@@ -5,7 +5,7 @@ public class HomeWork_02 {
         String[][] testArray = new String[4][5];
         try {
             checkArray(testArray);
-            System.out.println("Всё гуд, проходи");
+            System.out.println("Всё гуд, проходи.");
         }
         catch(MyArraySizeException e){
             e.printStackTrace();

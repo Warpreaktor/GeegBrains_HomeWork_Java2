@@ -49,7 +49,7 @@ public class HomeWork_02 {
                     sum += num;
                 }
                 catch (NumberFormatException e){
-                    throw new MyArrayDataException();
+                    throw new MyArrayDataException(i, j);
                 }
             }
         }

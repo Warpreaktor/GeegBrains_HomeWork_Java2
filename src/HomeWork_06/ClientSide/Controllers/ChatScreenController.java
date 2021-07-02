@@ -37,16 +37,20 @@ public class ChatScreenController implements Initializable {
     final String IP_ADDRESS = "localhost";
     final int PORT = 8044;
 
-    public ChatScreenController(){
+    public ChatScreenController() {
         this.vBox = new VBox(2);
         Image sendImg = new Image("HomeWork_06/ClientSide/resources/send_button.png");
         sendButton = new Button("   ", new ImageView(sendImg));
     }
 
     public void sendMsg(ActionEvent actionEvent) {
-        textArea.appendText(textField.getText() + "\n");
-        textField.clear();
-        textField.requestFocus();
+        try {
+            outputStream.writeUTF(textField.getText() + "\n");
+            textField.clear();
+            textField.requestFocus();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -55,15 +59,30 @@ public class ChatScreenController implements Initializable {
             socket = new Socket(IP_ADDRESS, PORT);
             inputStream = new DataInputStream(socket.getInputStream());
             outputStream = new DataOutputStream(socket.getOutputStream());
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        while (true) {
+                            String message = inputStream.readUTF();
+                            textArea.appendText(message + "\n");
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        try {
+                            socket.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }).start();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        finally {
-            try {
-                socket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+
     }
 }

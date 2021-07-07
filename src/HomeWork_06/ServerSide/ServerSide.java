@@ -1,5 +1,6 @@
-package HomeWork_06;
+package HomeWork_06.ServerSide;
 
+import HomeWork_06.AuthService;
 import HomeWork_06.ClientSide.ClientHandler;
 
 import java.io.DataInputStream;
@@ -22,13 +23,14 @@ public class ServerSide {
     public ServerSide(int port) {
         this.clients = new Vector<>();
         try {
+            AuthService.conect();
             this.server = new ServerSocket(port);
             System.out.println("Запущен новый сервер");
 
             while (true) {
                 this.socket = server.accept();
                 System.out.println("Клиент подключился");
-                clients.add(new ClientHandler(this, socket));
+                new ClientHandler(this, socket);
             }
 
         } catch (IOException e) {
@@ -40,7 +42,16 @@ public class ServerSide {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            AuthService.disconnect();
         }
+    }
+
+    public void subscribe(ClientHandler client){
+        clients.add(client);
+    }
+
+    public void unsubscribe(ClientHandler client){
+        clients.remove(client);
     }
 
     public void broadcastMessage(String msg){

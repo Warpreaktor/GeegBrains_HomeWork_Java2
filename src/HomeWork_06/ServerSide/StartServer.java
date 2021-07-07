@@ -1,4 +1,6 @@
-package HomeWork_06;
+package HomeWork_06.ServerSide;
+
+import HomeWork_06.ServerSide.ServerSide;
 
 public class StartServer {
     public static void main(String[] args) {

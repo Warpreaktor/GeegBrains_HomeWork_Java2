@@ -23,7 +23,7 @@ public class AuthService {
         }
     }
     public static String authentication(String login, String password){
-        //Пишем запрос в бд
+        //Навправляем запрос в бд
         String sqlRequest = String.format("SELECT nickname FROM users WHERE login = '%s' AND password = '%s'", login, password);
         try {
             //Получаем результат запроса и сохраняем его
@@ -37,8 +37,6 @@ public class AuthService {
         return null;
     }
 
-
-
     public static void disconnect(){
         try {
             connection.close();
@@ -46,5 +44,4 @@ public class AuthService {
             throwables.printStackTrace();
         }
     }
-
 }

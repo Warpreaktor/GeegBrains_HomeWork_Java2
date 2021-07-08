@@ -1,12 +1,10 @@
 package HomeWork_06.ClientSide.Controllers;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -27,6 +25,8 @@ public class ChatScreenController {
     PasswordField passwordField;
     @FXML
     Button auth;
+    @FXML
+    Label textLabel;
 
     //Окно чата
     @FXML
@@ -48,18 +48,17 @@ public class ChatScreenController {
     final int PORT = 8044;
     private boolean isAuthorized;
 
-    public void setAuthorized(boolean authorized){
+    public void setAuthorized(boolean authorized) {
         this.isAuthorized = authorized;
-        System.out.println(authorized);
-        if (isAuthorized){
+        if (isAuthorized) {
             upperPanel.setVisible(false);
             upperPanel.setManaged(false);
             textArea.setVisible(true);
             textArea.setManaged(true);
             bottomPanel.setVisible(true);
             bottomPanel.setManaged(true);
-        }else
-        {
+            textArea.clear();
+        } else {
             upperPanel.setVisible(true);
             upperPanel.setManaged(true);
             bottomPanel.setVisible(false);
@@ -74,7 +73,7 @@ public class ChatScreenController {
     }
 
     public void sendMsg(ActionEvent actionEvent) {
-        if (socket == null || socket.isClosed()){
+        if (socket == null || socket.isClosed()) {
             connect();
         }
         try {
@@ -86,11 +85,14 @@ public class ChatScreenController {
         }
     }
 
-    public void tryAuth(ActionEvent actionEvent){
+    //Событие при нажатии на кнопку Sign in на экране авторизации
+    public void tryAuth(ActionEvent actionEvent) {
         if (socket == null || socket.isClosed()) {
             connect();
         }
         try {
+            //Считываем введенные пользователем данные и отправляем их на обработку в ClientHandler
+            //Эту строчку перехватывает метод connect в параллельном треде.
             outputStream.writeUTF("/auth " + loginField.getText() + " " + passwordField.getText());
             loginField.clear();
             passwordField.clear();
@@ -99,6 +101,7 @@ public class ChatScreenController {
         }
     }
 
+    //Происходит перед попыткой пользователя авторизоваться
     public void connect() {
         try {
             socket = new Socket(IP_ADDRESS, PORT);
@@ -110,12 +113,19 @@ public class ChatScreenController {
                 public void run() {
                     try {
                         //Авторизация
-                        while (true){
+                        while (true) {
                             String str = inputStream.readUTF();
-                            if (str.startsWith("/authok")){
+                            if (str.startsWith("/authok")) {
                                 setAuthorized(true);
                                 break;
-                            }else{
+                            }
+                            if (str.startsWith("/authalready")) {
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        textLabel.setText("User is already log in");
+                                    }
+                                });
                                 textArea.appendText(str + "\n");
                             }
                         }
@@ -140,10 +150,8 @@ public class ChatScreenController {
                     }
                 }
             }).start();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }

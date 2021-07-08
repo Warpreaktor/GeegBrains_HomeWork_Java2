@@ -6,10 +6,8 @@ import HomeWork_06.ClientSide.ClientHandler;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
 import java.util.Vector;
 
 public class ServerSide {
@@ -32,11 +30,9 @@ public class ServerSide {
                 System.out.println("Клиент подключился");
                 new ClientHandler(this, socket);
             }
-
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             try {
                 server.close();
             } catch (IOException e) {
@@ -46,17 +42,41 @@ public class ServerSide {
         }
     }
 
-    public void subscribe(ClientHandler client){
+    public void subscribe(ClientHandler client) {
         clients.add(client);
     }
 
-    public void unsubscribe(ClientHandler client){
+    public void unsubscribe(ClientHandler client) {
         clients.remove(client);
     }
 
-    public void broadcastMessage(String msg){
-        for(ClientHandler itr: clients){
+    //Сервис доставки сообщений клиентам
+    public void broadcastMessage(String msg, String from) {
+        if (msg.startsWith("@")) {
+            if (msg.length() < 1 || msg.indexOf(32) == -1) {
+                return;
+            }
+            String nick = msg.substring(1, msg.indexOf(32, 1));
+            String personalMsg = msg.substring(msg.indexOf(32));
+            if (personalMsg == null) return;
+            for (ClientHandler itr : clients) {
+                if (itr.getNick().equals(nick) || itr. getNick().equals(from)) {
+                    itr.sendMessage(from + ": " + personalMsg);
+                }
+            }
+            return;
+        }
+        for (ClientHandler itr : clients) {
             itr.sendMessage(msg);
         }
+    }
+
+    public boolean userIsSignIn(String userNick) {
+        for (ClientHandler cl : clients) {
+            if (cl.getNick().equals(userNick)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

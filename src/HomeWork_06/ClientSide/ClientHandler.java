@@ -8,14 +8,22 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+/**
+ * Класс, по сути, отождествляется с подключённым к серверу клиенту.
+ * Объект существует пока есть соединение.
+ */
 public class ClientHandler {
     private ServerSide server;
     private Socket socket;
+
+    //Client information
+    private String login;
     private String nick;
 
     DataInputStream inputStream;
     DataOutputStream outputStream;
 
+    //Инициализация происходит после успешного подключения клиента к серверу
     public ClientHandler(ServerSide server, Socket socket) {
         try {
             this.server = server;
@@ -29,11 +37,17 @@ public class ClientHandler {
                     try {
                         //Цикл с аутентификацией
                         while (true) {
+                            //Читаем входящий поток на сокет
                             String str = inputStream.readUTF();
                             if (str.startsWith("/auth")) {
                                 String[] tokens = str.split(" ");
+                                //Запрос на авторизацию, сверка логина\пароля с БД.
                                 String currentNick = AuthService.authentication(tokens[1], tokens[2]);
                                 if (currentNick != null) {
+                                    if (server.userIsSignIn(currentNick)){
+                                        sendMessage("/authalready");
+                                        continue;
+                                    }
                                     sendMessage("/authok");
                                     nick = currentNick;
                                     server.subscribe(ClientHandler.this);
@@ -46,12 +60,11 @@ public class ClientHandler {
                         //Цикл отвечающий за взаимодействие
                         while (true) {
                             String message = inputStream.readUTF();
-                            System.out.println(this + "--> " + message);
                             if (finish(message)) {
                                 outputStream.writeUTF("/serverClosed");
                                 break;
                             }
-                            server.broadcastMessage(nick + " : " + message);
+                            server.broadcastMessage(message, nick);
                         }
 
                     } catch (IOException e) {

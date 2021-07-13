@@ -1,0 +1,59 @@
+#vBox{
+
+}
+
+#hbox {
+-fx-background-color: #deb887;
+}
+
+#sendButton {
+    -fx-font: 18px "Yu Gothic Regular";
+    /*-fx-background-image: url("../resources/send_button.png");*/
+    -fx-background-position: center;
+    -fx-background-size: 40;
+    -fx-background-radius: 40;
+}
+
+#textArea {
+    -fx-background-image: url("../resources/yamato.jpg");
+    -fx-background-position: center;
+    -fx-font: 18px "Yu Gothic Regular";
+    -fx-font-size: 24;
+    -fx-font-style: normal;
+    -fx-font-weight: 800;
+    -fx-padding: 4px;
+
+}
+
+.scroll-bar: vertical {
+    -fx-background-color: rgba(140,100,5,0.5);
+    -fx-background-color: #56AEB1;
+    -fx-background-radius: 15em;
+}
+
+.text-area .viewport {
+    -fx-background-color: transparent;
+}
+
+.text-area .content {
+        -fx-background-color: transparent;
+}
+
+.text-area .text {
+    -fx-effect: dropshadow(three-pass-box, #fdf5e6, 25, 0.9, 0, 0);
+    -fx-padding: 8px;
+}
+
+.text-area .node {
+    -fx-padding: 12px;
+}
+
+#textField {
+    -fx-background-radius: 100;
+    -fx-padding: 8px;
+    -fx-background-insets: 5px;
+    -fx-background-color: #483d8b;
+    /*-fx-background-image: url("../resources/yamato_msg_pan_dusk.jpg");*/
+    -fx-font: 18px "Yu Gothic Light";
+    -fx-text-fill:  #fff8dc;
+}

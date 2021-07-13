@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="vBox" styleClass="content" stylesheets="@../css/Design.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="HomeWork_06.ClientSide.Controllers.ChatScreenController">
+   <VBox fx:id="upperPanel" alignment="CENTER">
+      <children>
+         <TextField fx:id="loginField" promptText="login" />
+         <PasswordField fx:id="passwordField" promptText="password" />
+         <Button fx:id="auth" mnemonicParsing="false" onAction="#tryAuth" text="Sign in" />
+         <Label fx:id="textLabel" prefHeight="35.0" prefWidth="146.0" />
+      </children>
+   </VBox>
+    <TextArea fx:id="textArea" editable="false" managed="false" styleClass="text" visible="false" wrapText="true" VBox.vgrow="ALWAYS">
+      <VBox.margin>
+         <Insets />
+      </VBox.margin>
+      <font>
+         <Font name="Yu Gothic Regular" size="12.0" />
+      </font>
+   </TextArea>
+    <HBox fx:id="bottomPanel" managed="false" visible="false">
+        <TextField fx:id="textField" onAction="#sendMsg" promptText="Your message" styleClass="content" stylesheets="@../css/Design.css" HBox.hgrow="ALWAYS" />
+        <Button fx:id="sendButton" onAction="#sendMsg" prefHeight="40.0" styleClass="content" text="Send" textOverrun="CENTER_ELLIPSIS" />
+    </HBox>
+</VBox>

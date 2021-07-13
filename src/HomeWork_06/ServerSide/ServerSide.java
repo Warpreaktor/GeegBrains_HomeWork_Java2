@@ -8,6 +8,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.LinkedList;
 import java.util.Vector;
 
 public class ServerSide {
@@ -38,6 +41,7 @@ public class ServerSide {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            System.out.println("пока");
             AuthService.disconnect();
         }
     }
@@ -51,24 +55,43 @@ public class ServerSide {
     }
 
     //Сервис доставки сообщений клиентам
-    public void broadcastMessage(String msg, String from) {
+    public void broadcastMessage(String msg, String fromNick) {
         if (msg.startsWith("@")) {
             if (msg.length() < 1 || msg.indexOf(32) == -1) {
                 return;
             }
-            String nick = msg.substring(1, msg.indexOf(32, 1));
+            String toNick = msg.substring(1, msg.indexOf(32, 1));
+            if (isInBlackList(toNick, fromNick)) return;
             String personalMsg = msg.substring(msg.indexOf(32));
             if (personalMsg == null) return;
             for (ClientHandler itr : clients) {
-                if (itr.getNick().equals(nick) || itr. getNick().equals(from)) {
-                    itr.sendMessage(from + ": " + personalMsg);
+                if (itr.getNick().equals(toNick) || itr. getNick().equals(fromNick)) {
+                    itr.sendMessage(fromNick + ": " + personalMsg);
                 }
             }
             return;
         }
-        for (ClientHandler itr : clients) {
-            itr.sendMessage(msg);
+        for (ClientHandler client : clients) {
+            if (isInBlackList(client.getNick(), fromNick)) continue;
+            client.sendMessage(fromNick + ": " + msg);
         }
+    }
+
+    //Проверка пользователя черным списком.
+    private boolean isInBlackList(String toNick, String fromNick){
+        //TODO Слабое место. При большом объеме подключенных клиентов, выборка может быть не быстрой,
+        // но думаю, что этот код выдержит тысячу другую пользователей при их черных списках в сотню записей у каждого.
+        // Еще можно эту часть вынести на клиента и тогда мы будем фильтровать только все входящие по отправителю.
+        for(ClientHandler client: clients) {
+            if (client.getNick().equals(toNick)) {
+                for(String blackNames: client.getBlacklist()){
+                    if (blackNames.equals(fromNick)){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public boolean userIsSignIn(String userNick) {
@@ -79,4 +102,5 @@ public class ServerSide {
         }
         return false;
     }
+
 }

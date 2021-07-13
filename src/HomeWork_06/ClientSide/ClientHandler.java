@@ -7,6 +7,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.LinkedList;
 
 /**
  * Класс, по сути, отождествляется с подключённым к серверу клиенту.
@@ -19,6 +20,7 @@ public class ClientHandler {
     //Client information
     private String login;
     private String nick;
+    private LinkedList<String> blacklist; //лист забаненых никнеймов
 
     DataInputStream inputStream;
     DataOutputStream outputStream;
@@ -51,6 +53,7 @@ public class ClientHandler {
                                     sendMessage("/authok");
                                     nick = currentNick;
                                     server.subscribe(ClientHandler.this);
+                                    blacklist = AuthService.getClientBlackList(ClientHandler.this);
                                     break;
                                 }else {
                                     sendMessage("Unknown login\\password");
@@ -62,6 +65,12 @@ public class ClientHandler {
                             String message = inputStream.readUTF();
                             if (finish(message)) {
                                 outputStream.writeUTF("/serverClosed");
+                                break;
+                            }
+                            //TODO Запись в базу данных
+                            if (message.startsWith("/blacklist")) {
+                                String[] tokens = message.split(" ");
+                                blacklist.add(tokens[1]);
                                 break;
                             }
                             server.broadcastMessage(message, nick);
@@ -105,5 +114,9 @@ public class ClientHandler {
 
     public String getNick() {
         return nick;
+    }
+
+    public LinkedList<String> getBlacklist() {
+        return blacklist;
     }
 }

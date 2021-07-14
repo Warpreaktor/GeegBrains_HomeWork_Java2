@@ -7,6 +7,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.LinkedList;
 
 /**
@@ -32,6 +33,9 @@ public class ClientHandler {
             this.socket = socket;
             this.inputStream = new DataInputStream(socket.getInputStream());
             this.outputStream = new DataOutputStream(socket.getOutputStream());
+            //TODO починить сервис который собирает и передает пользователю блеклист из БД
+            blacklist = AuthService.getClientBlackList(this);
+            System.out.println(blacklist);
 
             new Thread(new Runnable() {
                 @Override
@@ -67,13 +71,12 @@ public class ClientHandler {
                                 if (currentNick != null) {
                                     //TODO Здесь должно быть три токена логин, пароль и ник. Для того нужно подготовить
                                     // пользовательский интерфейс
-                                    AuthService.addUser(tokens[1], tokens[2], tokens[1]);
+                                    try {
+                                        AuthService.addUser(tokens[1], tokens[2], tokens[1]);
+                                    } catch (SQLException throwables) {
+                                        sendMessage("#registrFail");
+                                    }
                                     sendMessage("#registrOk");
-                                    nick = currentNick;
-                                    server.subscribe(ClientHandler.this);
-                                    //TODO починить сервис который собирает и передает пользователю блеклист из БД
-                                    //blacklist = AuthService.getClientBlackList(ClientHandler.this);
-                                    break;
                                 }else {
                                     sendMessage("Unknown login\\password");
                                 }
@@ -86,7 +89,7 @@ public class ClientHandler {
                                 outputStream.writeUTF("/serverClosed");
                                 break;
                             }
-                            //TODO Тут должен вызываться метод класса AuthService add
+                            //TODO Тут должен вызываться метод класса AuthService addBlackMan
                             if (message.startsWith("/blacklist")) {
                                 String[] tokens = message.split(" ");
                                 blacklist.add(tokens[1]);

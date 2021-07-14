@@ -11,7 +11,7 @@ public class AuthService {
     //В переменной хранится состояние запроса к базе. По сути это SELECT
     private static Statement statement;
 
-    public static void conect(){
+    public static void connect(){
         try {
             //Инициализация драйвера JDBC
             Class.forName("org.sqlite.JDBC");
@@ -48,30 +48,40 @@ public class AuthService {
         }
     }
 
-    public static void addUser(String login, String pass, String nick) {
-        try {
-            String query = String.format("INSERT INTO users (login, password, nickname) VALUES ('%s', '%s', '%s');", login, pass, nick);
-            PreparedStatement ps = connection.prepareStatement(query);
-            //Не понимаю зачем здесь этот код. Возможно он и не нужен.
+    public static void addUser(String login, String pass, String nick) throws SQLException{
+        String nickname = getNickByLoginAndPass(login, pass);
+        if (nickname == null){
+            try {
+                String query = String.format("INSERT INTO users (login, password, nickname) VALUES ('%s', '%s', '%s');", login, pass, nick);
+                PreparedStatement ps = connection.prepareStatement(query);
+                //Не понимаю зачем здесь этот код. Возможно он и не нужен.
 //            ps.setString(1, login);
 //            ps.setInt(2, pass.hashCode());
 //            ps.setString(3, nick);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
+        if (nickname != null){
+            if (nickname.equals(login)){
+                throw new SQLException("Пользователь с таким никнеймом уже зарегистрирован");
+            }
+        }
+
     }
 
     public static String getNickByLoginAndPass(String login, String pass) {
         try {
-            ResultSet rs = statement.executeQuery("SELECT nickname, password FROM users WHERE login = '" + login + "'");
+            String sqlRequest = String.format("SELECT nickname, password FROM users WHERE login = '%s';", login);
+            ResultSet resultSet = statement.executeQuery(sqlRequest);
             int myHash = pass.hashCode();
-            if (rs.next()) {
-                String nick = rs.getString(1);
-                int dbHash = rs.getInt(2);
-                if (myHash == dbHash) {
-                    return nick;
-                }
+            if (resultSet.next()) {
+                String nick = resultSet.getString(1);
+                //int dbHash = rs.getInt(2);
+               // if (myHash == dbHash) {
+                return nick;
+                //}
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -79,12 +89,11 @@ public class AuthService {
         return null;
     }
 
-    //TODO Все обращения в БД желательно вынести в отдельный сервис.
     public static LinkedList<String> getClientBlackList(ClientHandler client){
         LinkedList<String> blacklist = new LinkedList<>();
-        String sqlrequest = String.format("SELECT nickname_ban FROM blacklist WHERE login_owner = '%s'", client);
+        String sqlRequest = String.format("SELECT nickname_ban FROM blacklist WHERE login_owner = '%s';", client);
         try {
-            ResultSet resultSet = statement.executeQuery(sqlrequest);
+            ResultSet resultSet = statement.executeQuery(sqlRequest);
             while (resultSet.next()){
                 blacklist.add(resultSet.getString(1));
             }
@@ -92,7 +101,10 @@ public class AuthService {
             throwables.printStackTrace();
         }
         //TODO Возникает ошибка             java.sql.SQLException: ResultSet is closed
-        System.out.println(blacklist.getFirst());
         return blacklist;
+    }
+
+    public static void addUserToBlackList(String nick){
+
     }
 }

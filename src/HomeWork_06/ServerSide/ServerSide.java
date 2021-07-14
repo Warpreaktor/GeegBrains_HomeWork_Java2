@@ -8,9 +8,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.LinkedList;
 import java.util.Vector;
 
 public class ServerSide {
@@ -24,7 +21,7 @@ public class ServerSide {
     public ServerSide(int port) {
         this.clients = new Vector<>();
         try {
-            AuthService.conect();
+            AuthService.connect();
             this.server = new ServerSocket(port);
             System.out.println("Запущен новый сервер");
 

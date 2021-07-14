@@ -143,7 +143,14 @@ public class ChatScreenController {
                                         textLabel.setText("New user registered, please authorize");
                                     }
                                 });
-                                continue;
+                            }
+                            if (str.startsWith("#registrFail")) {
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        textLabel.setText("This nickname has already registered");
+                                    }
+                                });
                             }
                             if (str.startsWith("/authalready")) {
                                 Platform.runLater(new Runnable() {

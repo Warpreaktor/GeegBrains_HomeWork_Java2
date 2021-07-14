@@ -48,6 +48,37 @@ public class AuthService {
         }
     }
 
+    public static void addUser(String login, String pass, String nick) {
+        try {
+            String query = "INSERT INTO users (login, password, nickname) VALUES ('%s', '%s', ?);";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, login);
+            ps.setInt(2, pass.hashCode());
+            ps.setString(3, nick);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String getNickByLoginAndPass(String login, String pass) {
+        try {
+            ResultSet rs = statement.executeQuery("SELECT nickname, password FROM users WHERE login = '" + login + "'");
+            int myHash = pass.hashCode();
+            // 106438208
+            if (rs.next()) {
+                String nick = rs.getString(1);
+                int dbHash = rs.getInt(2);
+                if (myHash == dbHash) {
+                    return nick;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     //TODO Все обращения в БД желательно вынести в отдельный сервис.
     public static LinkedList<String> getClientBlackList(ClientHandler client){
         LinkedList<String> blacklist = new LinkedList<>();

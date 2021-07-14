@@ -50,7 +50,7 @@ public class AuthService {
 
     public static void addUser(String login, String pass, String nick) {
         try {
-            String query = "INSERT INTO users (login, password, nickname) VALUES ('%s', '%s', ?);";
+            String query = String.format("INSERT INTO users (login, password, nickname) VALUES ('%s', '%s', %s);", login, pass, nick);
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, login);
             ps.setInt(2, pass.hashCode());
@@ -65,7 +65,6 @@ public class AuthService {
         try {
             ResultSet rs = statement.executeQuery("SELECT nickname, password FROM users WHERE login = '" + login + "'");
             int myHash = pass.hashCode();
-            // 106438208
             if (rs.next()) {
                 String nick = rs.getString(1);
                 int dbHash = rs.getInt(2);

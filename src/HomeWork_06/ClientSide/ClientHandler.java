@@ -53,7 +53,8 @@ public class ClientHandler {
                                     sendMessage("/authok");
                                     nick = currentNick;
                                     server.subscribe(ClientHandler.this);
-                                    blacklist = AuthService.getClientBlackList(ClientHandler.this);
+                                    //TODO починить сервис который собирает и передает пользователю блеклист из БД
+                                    //blacklist = AuthService.getClientBlackList(ClientHandler.this);
                                     break;
                                 }else {
                                     sendMessage("Unknown login\\password");
@@ -67,7 +68,7 @@ public class ClientHandler {
                                 outputStream.writeUTF("/serverClosed");
                                 break;
                             }
-                            //TODO Запись в базу данных
+                            //TODO Тут должен вызываться метод класса AuthService add
                             if (message.startsWith("/blacklist")) {
                                 String[] tokens = message.split(" ");
                                 blacklist.add(tokens[1]);

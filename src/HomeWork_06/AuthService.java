@@ -64,9 +64,7 @@ public class AuthService {
             }
         }
         if (nickname != null){
-            System.out.println(nickname + " " + login);
             if (nickname.equals(login)){
-                System.out.println("exception");
                 throw new SQLException("Пользователь с таким никнеймом уже зарегистрирован");
             }
         }
@@ -107,9 +105,10 @@ public class AuthService {
     }
 
     public static void updateBlackList(ClientHandler listOwner){
-        String sqlRequest = String.format("DELETE FROM blacklist where login_owner = '%s';", listOwner);
-        for (String str: listOwner.getBlacklist()){
-            addUserToBlackList(str);
+        String sqlRequestDelete = String.format("DELETE FROM blacklist where login_owner = '%s';", listOwner);
+        for (String blackName: listOwner.getBlacklist()){
+            //TODO Запрос необходимо оптимизировать таким образом чтобы за один запрос к базе добавить всех
+            String sqlRequestInsert = String.format("INSERT INTO blacklist (login_owner, nickname_ban) VALUES ('%s', '%s');", listOwner, blackName);
         }
     }
 }

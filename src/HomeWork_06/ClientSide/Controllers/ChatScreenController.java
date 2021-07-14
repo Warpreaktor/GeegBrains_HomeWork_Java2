@@ -62,8 +62,11 @@ public class ChatScreenController {
         } else {
             upperPanel.setVisible(true);
             upperPanel.setManaged(true);
+            textArea.setVisible(false);
+            textArea.setManaged(false);
             bottomPanel.setVisible(false);
             bottomPanel.setManaged(false);
+            textArea.clear();
         }
     }
 
@@ -165,7 +168,7 @@ public class ChatScreenController {
 
                         while (true) {
                             String message = inputStream.readUTF();
-                            if (message.equals("/serverClosed")) {
+                            if (message.startsWith("#end")) {
                                 outputStream.writeUTF("/end");
                                 break;
                             }
@@ -176,10 +179,10 @@ public class ChatScreenController {
                     } finally {
                         try {
                             socket.close();
+                            setAuthorized(false);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        setAuthorized(false);
                     }
                 }
             }).start();

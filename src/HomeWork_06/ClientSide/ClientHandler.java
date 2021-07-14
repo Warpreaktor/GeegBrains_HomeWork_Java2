@@ -2,6 +2,7 @@ package HomeWork_06.ClientSide;
 
 import HomeWork_06.AuthService;
 import HomeWork_06.ServerSide.ServerSide;
+import org.w3c.dom.ls.LSOutput;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -82,18 +83,22 @@ public class ClientHandler {
                                 }
                             }
                         }
+
                         //Цикл отвечающий за взаимодействие
                         while (true) {
                             String message = inputStream.readUTF();
-                            if (finish(message)) {
-                                outputStream.writeUTF("/serverClosed");
+                            if (message.startsWith("#end")) {
+                                outputStream.writeUTF("#end");
+                                System.out.println("#serverClosed");
                                 break;
                             }
-                            //TODO Тут должен вызываться метод класса AuthService addBlackMan
-                            if (message.startsWith("/blacklist")) {
+                            if (message.startsWith("#black")) {
                                 String[] tokens = message.split(" ");
-                                blacklist.add(tokens[1]);
-                                break;
+                                if (tokens[1] != null) {
+                                    blacklist.add(tokens[1]);
+                                    System.out.println(getBlacklist());
+                                    continue;
+                                }
                             }
                             server.broadcastMessage(message, nick);
                         }
@@ -126,14 +131,6 @@ public class ClientHandler {
         }
     }
 
-    private boolean finish(String command) {
-        if (command.equals("/end")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public String getNick() {
         return nick;
     }
@@ -148,5 +145,9 @@ public class ClientHandler {
 
     public void setBlacklist(LinkedList<String> blacklist) {
         this.blacklist = blacklist;
+    }
+
+    private void addUserToBlackList(String nick){
+        blacklist.add(nick);
     }
 }

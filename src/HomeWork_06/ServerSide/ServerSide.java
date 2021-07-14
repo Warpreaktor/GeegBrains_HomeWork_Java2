@@ -38,7 +38,6 @@ public class ServerSide {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.println("пока");
             AuthService.disconnect();
         }
     }
@@ -46,11 +45,12 @@ public class ServerSide {
     public void subscribe(ClientHandler client) {
         clients.add(client);
         client.setBlacklist(AuthService.getClientBlackList(client.getNick()));
+        System.out.println(client.getBlacklist());
     }
 
     public void unsubscribe(ClientHandler client) {
         clients.remove(client);
-        AuthService.updateBlackList(client.getNick());
+        AuthService.updateBlackList(client);
     }
 
     //Сервис доставки сообщений клиентам

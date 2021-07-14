@@ -50,11 +50,12 @@ public class AuthService {
 
     public static void addUser(String login, String pass, String nick) {
         try {
-            String query = String.format("INSERT INTO users (login, password, nickname) VALUES ('%s', '%s', %s);", login, pass, nick);
+            String query = String.format("INSERT INTO users (login, password, nickname) VALUES ('%s', '%s', '%s');", login, pass, nick);
             PreparedStatement ps = connection.prepareStatement(query);
-            ps.setString(1, login);
-            ps.setInt(2, pass.hashCode());
-            ps.setString(3, nick);
+            //Не понимаю зачем здесь этот код. Возможно он и не нужен.
+//            ps.setString(1, login);
+//            ps.setInt(2, pass.hashCode());
+//            ps.setString(3, nick);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

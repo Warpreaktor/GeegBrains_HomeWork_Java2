@@ -94,7 +94,7 @@ public class ServerSide {
         return false;
     }
 
-    public boolean userIsSignIn(String userNick) {
+    public boolean userIsLogged(String userNick) {
         for (ClientHandler cl : clients) {
             if (cl.getNick().equals(userNick)) {
                 return true;

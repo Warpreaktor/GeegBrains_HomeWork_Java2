@@ -15,7 +15,12 @@
       <children>
          <TextField fx:id="loginField" promptText="login" />
          <PasswordField fx:id="passwordField" promptText="password" />
-         <Button fx:id="auth" mnemonicParsing="false" onAction="#tryAuth" text="Sign in" />
+         <HBox alignment="CENTER">
+            <children>
+               <Button fx:id="logIn" mnemonicParsing="false" onAction="#tryAuth" text="Log in" />
+               <Button fx:id="signUp" onAction="#tryAddUser" mnemonicParsing="false" text="Sign Up" />
+            </children>
+         </HBox>
          <Label fx:id="textLabel" prefHeight="35.0" prefWidth="146.0" />
       </children>
    </VBox>

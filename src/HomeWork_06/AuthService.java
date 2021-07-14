@@ -106,7 +106,10 @@ public class AuthService {
         return blacklist;
     }
 
-    public static void addUserToBlackList(String nick){
-
+    public static void updateBlackList(ClientHandler listOwner){
+        String sqlRequest = String.format("DELETE FROM blacklist where login_owner = '%s';", listOwner);
+        for (String str: listOwner.getBlacklist()){
+            addUserToBlackList(str);
+        }
     }
 }

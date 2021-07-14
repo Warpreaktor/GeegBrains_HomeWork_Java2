@@ -89,9 +89,9 @@ public class AuthService {
         return null;
     }
 
-    public static LinkedList<String> getClientBlackList(ClientHandler client){
+    public static LinkedList<String> getClientBlackList(String listOwner){
         LinkedList<String> blacklist = new LinkedList<>();
-        String sqlRequest = String.format("SELECT nickname_ban FROM blacklist WHERE login_owner = '%s';", client);
+        String sqlRequest = String.format("SELECT nickname_ban FROM blacklist WHERE login_owner = '%s';", listOwner);
         try {
             ResultSet resultSet = statement.executeQuery(sqlRequest);
             while (resultSet.next()){

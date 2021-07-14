@@ -8,6 +8,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 /**
@@ -34,8 +35,7 @@ public class ClientHandler {
             this.inputStream = new DataInputStream(socket.getInputStream());
             this.outputStream = new DataOutputStream(socket.getOutputStream());
             //TODO починить сервис который собирает и передает пользователю блеклист из БД
-            blacklist = AuthService.getClientBlackList(this);
-            System.out.println(blacklist);
+
 
             new Thread(new Runnable() {
                 @Override
@@ -139,6 +139,14 @@ public class ClientHandler {
     }
 
     public LinkedList<String> getBlacklist() {
-        return blacklist;
+        LinkedList<String> copyBlacklist = new LinkedList<>();
+        for(String str: blacklist){
+            copyBlacklist.add(str);
+        }
+        return copyBlacklist;
+    }
+
+    public void setBlacklist(LinkedList<String> blacklist) {
+        this.blacklist = blacklist;
     }
 }

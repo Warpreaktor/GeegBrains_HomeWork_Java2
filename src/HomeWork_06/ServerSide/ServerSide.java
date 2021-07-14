@@ -45,6 +45,8 @@ public class ServerSide {
 
     public void subscribe(ClientHandler client) {
         clients.add(client);
+        client.setBlacklist(AuthService.getClientBlackList(client.getNick()));
+        System.out.println(client.getBlacklist());
     }
 
     public void unsubscribe(ClientHandler client) {

@@ -73,10 +73,10 @@ public class ClientHandler {
                                     // пользовательский интерфейс
                                     try {
                                         AuthService.addUser(tokens[1], tokens[2], tokens[1]);
-                                    } catch (SQLException throwables) {
+                                        sendMessage("#registrOk");
+                                    } catch (SQLException e) {
                                         sendMessage("#registrFail");
                                     }
-                                    sendMessage("#registrOk");
                                 }else {
                                     sendMessage("Unknown login\\password");
                                 }

@@ -64,7 +64,9 @@ public class AuthService {
             }
         }
         if (nickname != null){
+            System.out.println(nickname + " " + login);
             if (nickname.equals(login)){
+                System.out.println("exception");
                 throw new SQLException("Пользователь с таким никнеймом уже зарегистрирован");
             }
         }

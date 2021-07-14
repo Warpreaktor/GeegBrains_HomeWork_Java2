@@ -7,7 +7,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.LinkedList;
 
 /**
  * Класс, по сути, отождествляется с подключённым к серверу клиенту.
@@ -20,7 +19,6 @@ public class ClientHandler {
     //Client information
     private String login;
     private String nick;
-    private LinkedList<String> blacklist; //лист забаненых никнеймов
 
     DataInputStream inputStream;
     DataOutputStream outputStream;
@@ -46,33 +44,13 @@ public class ClientHandler {
                                 //Запрос на авторизацию, сверка логина\пароля с БД.
                                 String currentNick = AuthService.authentication(tokens[1], tokens[2]);
                                 if (currentNick != null) {
-                                    if (server.userIsLogged(currentNick)){
+                                    if (server.userIsSignIn(currentNick)){
                                         sendMessage("/authalready");
                                         continue;
                                     }
                                     sendMessage("/authok");
                                     nick = currentNick;
                                     server.subscribe(ClientHandler.this);
-                                    //TODO починить сервис который собирает и передает пользователю блеклист из БД
-                                    //blacklist = AuthService.getClientBlackList(ClientHandler.this);
-                                    break;
-                                }else {
-                                    sendMessage("Unknown login\\password");
-                                }
-                            }
-                            //Запрос на регистрацию нового юзера.
-                            if (str.startsWith("#addUser")) {
-                                String[] tokens = str.split(" ");
-                                String currentNick = tokens[1];
-                                if (currentNick != null) {
-                                    //TODO Здесь должно быть три токена логин, пароль и ник. Для того нужно подготовить
-                                    // пользовательский интерфейс
-                                    AuthService.addUser(tokens[1], tokens[2], tokens[1]);
-                                    sendMessage("#registrOk");
-                                    nick = currentNick;
-                                    server.subscribe(ClientHandler.this);
-                                    //TODO починить сервис который собирает и передает пользователю блеклист из БД
-                                    //blacklist = AuthService.getClientBlackList(ClientHandler.this);
                                     break;
                                 }else {
                                     sendMessage("Unknown login\\password");
@@ -84,12 +62,6 @@ public class ClientHandler {
                             String message = inputStream.readUTF();
                             if (finish(message)) {
                                 outputStream.writeUTF("/serverClosed");
-                                break;
-                            }
-                            //TODO Тут должен вызываться метод класса AuthService add
-                            if (message.startsWith("/blacklist")) {
-                                String[] tokens = message.split(" ");
-                                blacklist.add(tokens[1]);
                                 break;
                             }
                             server.broadcastMessage(message, nick);
@@ -133,9 +105,5 @@ public class ClientHandler {
 
     public String getNick() {
         return nick;
-    }
-
-    public LinkedList<String> getBlacklist() {
-        return blacklist;
     }
 }

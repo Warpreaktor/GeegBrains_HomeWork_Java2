@@ -3,7 +3,6 @@ package HomeWork_06.ClientSide.Controllers;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,7 +23,9 @@ public class ChatScreenController {
     @FXML
     PasswordField passwordField;
     @FXML
-    Button auth;
+    Button logIn;
+    @FXML
+    Button signUp;
     @FXML
     Label textLabel;
 
@@ -85,7 +86,7 @@ public class ChatScreenController {
         }
     }
 
-    //Событие при нажатии на кнопку Sign in на экране авторизации
+    //Событие при нажатии на кнопку Log in на экране авторизации
     public void tryAuth(ActionEvent actionEvent) {
         if (socket == null || socket.isClosed()) {
             connect();
@@ -94,6 +95,22 @@ public class ChatScreenController {
             //Считываем введенные пользователем данные и отправляем их на обработку в ClientHandler
             //Эту строчку перехватывает метод connect в параллельном треде.
             outputStream.writeUTF("/auth " + loginField.getText() + " " + passwordField.getText());
+            loginField.clear();
+            passwordField.clear();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //Событие при нажатии на кнопку Sign up на экране авторизации
+    public void tryAddUser(ActionEvent actionEvent) {
+        if (socket == null || socket.isClosed()) {
+            connect();
+        }
+        try {
+            //TODO Сделать нормальную форму аутентификации, чтобы пользователь мог ввести и свой ник нейм
+            //Повторяется логин для того чтобы в базу данных записать и ник который будет равен логину
+            outputStream.writeUTF("#addUser " + loginField.getText() + " " + passwordField.getText() + " " + loginField.getText());
             loginField.clear();
             passwordField.clear();
         } catch (IOException e) {
@@ -118,6 +135,15 @@ public class ChatScreenController {
                             if (str.startsWith("/authok")) {
                                 setAuthorized(true);
                                 break;
+                            }
+                            if (str.startsWith("#registrOk")) {
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        textLabel.setText("New user registered, please authorize");
+                                    }
+                                });
+                                continue;
                             }
                             if (str.startsWith("/authalready")) {
                                 Platform.runLater(new Runnable() {

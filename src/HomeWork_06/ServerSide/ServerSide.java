@@ -44,8 +44,8 @@ public class ServerSide {
 
     public void subscribe(ClientHandler client) {
         clients.add(client);
+        client.addToKontactBar(client.getNick());
         client.setBlacklist(AuthService.getClientBlackList(client.getNick()));
-        System.out.println(client.getBlacklist());
     }
 
     public void unsubscribe(ClientHandler client) {
@@ -71,8 +71,15 @@ public class ServerSide {
             return;
         }
         for (ClientHandler client : clients) {
-            if (isInBlackList(client.getNick(), fromNick)) continue;
-            client.sendMessage(fromNick + ": " + msg);
+            if (isInBlackList(client.getNick(), fromNick)) {
+                continue;
+            }
+            if (client.getNick().equals(fromNick)) {
+                client.sendMessage("#mymessage " + msg);
+            }else {
+                System.out.println("send = " + msg);
+                client.sendMessage(fromNick + ": " + msg);
+            }
         }
     }
 

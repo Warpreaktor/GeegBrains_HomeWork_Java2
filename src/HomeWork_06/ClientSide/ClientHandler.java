@@ -2,14 +2,12 @@ package HomeWork_06.ClientSide;
 
 import HomeWork_06.AuthService;
 import HomeWork_06.ServerSide.ServerSide;
-import org.w3c.dom.ls.LSOutput;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.LinkedList;
 
 /**
@@ -58,8 +56,6 @@ public class ClientHandler {
                                     sendMessage("/authok");
                                     nick = currentNick;
                                     server.subscribe(ClientHandler.this);
-                                    //TODO починить сервис который собирает и передает пользователю блеклист из БД
-                                    //blacklist = AuthService.getClientBlackList(ClientHandler.this);
                                     break;
                                 }else {
                                     sendMessage("Unknown login\\password");
@@ -95,8 +91,11 @@ public class ClientHandler {
                             if (message.startsWith("#black")) {
                                 String[] tokens = message.split(" ");
                                 if (tokens[1] != null) {
-                                    blacklist.add(tokens[1]);
-                                    continue;
+                                    if (tokens[1].replaceAll("\n", "").equals(nick)){
+                                        outputStream.writeUTF("#youarenotblack");
+                                    }else {
+                                        addUserToLocalBlackList(tokens[1]);
+                                    }
                                 }
                             }
                             server.broadcastMessage(message, nick);
@@ -146,7 +145,22 @@ public class ClientHandler {
         this.blacklist = blacklist;
     }
 
-    private void addUserToBlackList(String nick){
+    private void addUserToLocalBlackList(String nick){
+        for(String blackName : blacklist) {
+            if (blackName.equals(nick)){
+                sendMessage("#useralrexblack " + nick);
+                return;
+            }
+        }
+        try {
+            outputStream.writeUTF("#newblackpeople " + nick);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         blacklist.add(nick);
+    }
+
+    public void addToKontactBar(String nick){
+        sendMessage("#addContact");
     }
 }

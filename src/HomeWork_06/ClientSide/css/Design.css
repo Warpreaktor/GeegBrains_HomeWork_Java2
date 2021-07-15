@@ -14,7 +14,7 @@
     -fx-background-radius: 40;
 }
 
-#textArea {
+#mainVBox {
     -fx-background-image: url("../resources/yamato.jpg");
     -fx-background-position: center;
     -fx-font: 18px "Yu Gothic Regular";

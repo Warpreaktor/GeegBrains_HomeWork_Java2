@@ -3,11 +3,11 @@ package HomeWork_06.ClientSide.Controllers;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -15,6 +15,10 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class ChatScreenController {
+    //Панель контактов
+    @FXML
+    VBox contactBar;
+
     //Окно авторизации
     @FXML
     VBox upperPanel;
@@ -31,11 +35,17 @@ public class ChatScreenController {
 
     //Окно чата
     @FXML
+    ScrollPane chatPanel;
+    @FXML
+    VBox chatArea;
+    @FXML
+    BorderPane chatBorderPane;
+    @FXML
+    VBox chatWall;
+    @FXML
     HBox bottomPanel;
     @FXML
-    VBox vBox;
-    @FXML
-    TextArea textArea;
+    VBox mainVBox;
     @FXML
     TextField textField;
     @FXML
@@ -54,24 +64,30 @@ public class ChatScreenController {
         if (isAuthorized) {
             upperPanel.setVisible(false);
             upperPanel.setManaged(false);
-            textArea.setVisible(true);
-            textArea.setManaged(true);
+
+            chatPanel.setVisible(true);
+            chatPanel.setManaged(true);
+            chatArea.setVisible(true);
+            chatArea.setManaged(true);
             bottomPanel.setVisible(true);
             bottomPanel.setManaged(true);
-            textArea.clear();
         } else {
             upperPanel.setVisible(true);
             upperPanel.setManaged(true);
-            textArea.setVisible(false);
-            textArea.setManaged(false);
+
+            chatPanel.setVisible(false);
+            chatPanel.setManaged(false);
+            chatPanel.setMinHeight(300);
+            chatPanel.setMaxHeight(300);
+            chatArea.setVisible(false);
+            chatArea.setManaged(false);
             bottomPanel.setVisible(false);
             bottomPanel.setManaged(false);
-            textArea.clear();
         }
     }
 
     public ChatScreenController() {
-        this.vBox = new VBox(2);
+        this.mainVBox = new VBox(2);
         Image sendImg = new Image("HomeWork_06/ClientSide/resources/send_button.png");
         sendButton = new Button("   ", new ImageView(sendImg));
     }
@@ -121,6 +137,20 @@ public class ChatScreenController {
         }
     }
 
+    private void drawMessage(String message) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                HBox hBoxMsg = new HBox();
+                hBoxMsg.setAlignment(Pos.CENTER_RIGHT);
+                hBoxMsg.setMinWidth(250);
+                Label label = new Label(message);
+                hBoxMsg.getChildren().add(label);
+                chatArea.getChildren().add(hBoxMsg);
+            }
+        });
+    }
+
     //Происходит перед попыткой пользователя авторизоваться
     public void connect() {
         try {
@@ -162,7 +192,6 @@ public class ChatScreenController {
                                         textLabel.setText("User is already log in");
                                     }
                                 });
-                                textArea.appendText(str + "\n");
                             }
                         }
                         //Экран чата
@@ -172,12 +201,31 @@ public class ChatScreenController {
                                 outputStream.writeUTF("/end");
                                 break;
                             }
-                            if (message.startsWith("#black")) {
+                            if (message.startsWith("#newblackpeople")) {
                                 String[] tokens = message.split(" ");
                                 if (tokens[1] != null) {
-                                    textArea.appendText("bot: " + "user with nickname " + "added to blacklist");
+                                    drawMessage("<kiki_bot>: " + "user with nickname \"" + tokens[1] + "\" added to blacklist");
                                 }
+                                continue;
                             }
+                            if (message.startsWith("#youarenotblack")) {
+                                drawMessage("<kiki_bot>: " + "this user can not be added to blacklist, " +
+                                        "because it is you are");
+                                continue;
+                            }
+                            if (message.startsWith("#useralrexblack")) {
+                                String[] tokens = message.split(" ");
+                                if (tokens[1] != null) {
+                                    drawMessage("<kiki_bot>: " + "user with nickname \"" + tokens[1] + "\" already exist in your blacklist");
+                                }
+                                continue;
+                            }
+                            if (message.startsWith("#mymessage")) {
+                                String[] tokens = message.split(" ", 2);
+                                drawMessage(tokens[1]);
+                                continue;
+                            }
+                            drawMessage(message);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();

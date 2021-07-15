@@ -96,7 +96,6 @@ public class ClientHandler {
                                 String[] tokens = message.split(" ");
                                 if (tokens[1] != null) {
                                     blacklist.add(tokens[1]);
-                                    System.out.println(getBlacklist());
                                     continue;
                                 }
                             }

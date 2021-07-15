@@ -52,8 +52,8 @@ public class AuthService {
         String nickname = getNickByLoginAndPass(login, pass);
         if (nickname == null){
             try {
-                String query = String.format("INSERT INTO users (login, password, nickname) VALUES ('%s', '%s', '%s');", login, pass, nick);
-                PreparedStatement ps = connection.prepareStatement(query);
+                String sqlRequest = String.format("INSERT INTO users (login, password, nickname) VALUES ('%s', '%s', '%s');", login, pass, nick);
+                PreparedStatement ps = connection.prepareStatement(sqlRequest);
                 //Не понимаю зачем здесь этот код. Возможно он и не нужен.
 //            ps.setString(1, login);
 //            ps.setInt(2, pass.hashCode());
@@ -105,10 +105,19 @@ public class AuthService {
     }
 
     public static void updateBlackList(ClientHandler listOwner){
-        String sqlRequestDelete = String.format("DELETE FROM blacklist where login_owner = '%s';", listOwner);
-        for (String blackName: listOwner.getBlacklist()){
-            //TODO Запрос необходимо оптимизировать таким образом чтобы за один запрос к базе добавить всех
-            String sqlRequestInsert = String.format("INSERT INTO blacklist (login_owner, nickname_ban) VALUES ('%s', '%s');", listOwner, blackName);
+        String sqlDelete = String.format("DELETE FROM blacklist where login_owner = '%s';", listOwner.getNick());
+        try {
+            PreparedStatement psDel = connection.prepareStatement(sqlDelete);
+            psDel.executeUpdate();
+            for (String blackName: listOwner.getBlacklist()){
+                //TODO Запрос необходимо оптимизировать таким образом чтобы за один запрос к базе добавить всех
+                String sqlInsert = String.format("INSERT INTO blacklist (login_owner, nickname_ban) VALUES ('%s', '%s');", listOwner.getNick(), blackName);
+                PreparedStatement psInsert = connection.prepareStatement(sqlInsert);
+                psInsert.executeUpdate();
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
+
     }
 }

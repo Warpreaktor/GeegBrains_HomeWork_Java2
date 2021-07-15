@@ -132,7 +132,7 @@ public class ChatScreenController {
                 @Override
                 public void run() {
                     try {
-                        //Авторизация
+                        //Экран авторизации
                         while (true) {
                             String str = inputStream.readUTF();
                             if (str.startsWith("/authok")) {
@@ -165,14 +165,19 @@ public class ChatScreenController {
                                 textArea.appendText(str + "\n");
                             }
                         }
-
+                        //Экран чата
                         while (true) {
                             String message = inputStream.readUTF();
                             if (message.startsWith("#end")) {
                                 outputStream.writeUTF("/end");
                                 break;
                             }
-                            textArea.appendText(message + "\n");
+                            if (message.startsWith("#black")) {
+                                String[] tokens = message.split(" ");
+                                if (tokens[1] != null) {
+                                    textArea.appendText("bot: " + "user with nickname " + "added to blacklist");
+                                }
+                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();

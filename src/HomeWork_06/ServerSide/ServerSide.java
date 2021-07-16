@@ -45,8 +45,17 @@ public class ServerSide {
 
     public void subscribe(ClientHandler client) {
         clients.add(client);
+        //Загружаем входящему клиенту всех текущих пользователей чата
         for(ClientHandler cli: clients) {
-            client.addContact(cli);
+            if (cli != client) {
+                client.addContact(cli);
+            }
+        }
+        //Загружаем всем пользователям чата вошедшего клиента
+        for(ClientHandler cli: clients) {
+            if (cli != client) {
+                cli.addContact(client);
+            }
         }
         client.setBlacklist(AuthService.getClientBlackList(client.getNick()));
     }

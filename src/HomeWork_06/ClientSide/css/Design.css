@@ -7,10 +7,10 @@
 }
 
 #sendButton {
+    -fx-background-image: url("../resources/send_button.png");
     -fx-font: 18px "Yu Gothic Regular";
-    /*-fx-background-image: url("../resources/send_button.png");*/
     -fx-background-position: center;
-    -fx-background-size: 40;
+    -fx-background-size: 64;
     -fx-background-radius: 40;
 }
 
@@ -53,7 +53,6 @@
     -fx-padding: 8px;
     -fx-background-insets: 5px;
     -fx-background-color: #483d8b;
-    /*-fx-background-image: url("../resources/yamato_msg_pan_dusk.jpg");*/
     -fx-font: 18px "Yu Gothic Light";
     -fx-text-fill:  #fff8dc;
 }

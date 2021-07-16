@@ -8,6 +8,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.Vector;
 
 public class ServerSide {
@@ -44,7 +45,9 @@ public class ServerSide {
 
     public void subscribe(ClientHandler client) {
         clients.add(client);
-        client.addToKontactBar(client.getNick());
+        for(ClientHandler cli: clients) {
+            client.addContact(cli);
+        }
         client.setBlacklist(AuthService.getClientBlackList(client.getNick()));
     }
 

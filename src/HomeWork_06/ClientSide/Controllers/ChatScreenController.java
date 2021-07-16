@@ -8,11 +8,15 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ChatScreenController {
     //Панель контактов
@@ -34,6 +38,8 @@ public class ChatScreenController {
     Label textLabel;
 
     //Окно чата
+    BackgroundImage myMessage;
+    BackgroundImage anotherMessage;
     @FXML
     ScrollPane chatPanel;
     @FXML
@@ -61,6 +67,25 @@ public class ChatScreenController {
 
     public void setAuthorized(boolean authorized) {
         this.isAuthorized = authorized;
+        this.myMessage = new BackgroundImage(
+                new Image("HomeWork_06/ClientSide/resources/myMessage.png"),
+                BackgroundRepeat.ROUND,
+                BackgroundRepeat.ROUND,
+                BackgroundPosition.CENTER,
+                BackgroundSize.DEFAULT
+        );
+        this.myMessage = new BackgroundImage(
+                new Image("HomeWork_06/ClientSide/resources/anotherMessage.png"),
+                BackgroundRepeat.ROUND,
+                BackgroundRepeat.ROUND,
+                BackgroundPosition.CENTER,
+                BackgroundSize.DEFAULT
+        );
+
+        this.mainVBox = new VBox(2);
+        Image sendImg = new Image("HomeWork_06/ClientSide/resources/send_button.png");
+        sendButton = new Button("   ", new ImageView(sendImg));
+
         if (isAuthorized) {
             upperPanel.setVisible(false);
             upperPanel.setManaged(false);
@@ -71,25 +96,25 @@ public class ChatScreenController {
             chatArea.setManaged(true);
             bottomPanel.setVisible(true);
             bottomPanel.setManaged(true);
+
         } else {
             upperPanel.setVisible(true);
             upperPanel.setManaged(true);
 
             chatPanel.setVisible(false);
             chatPanel.setManaged(false);
-            chatPanel.setMinHeight(300);
-            chatPanel.setMaxHeight(300);
             chatArea.setVisible(false);
             chatArea.setManaged(false);
             bottomPanel.setVisible(false);
             bottomPanel.setManaged(false);
+            textField.setFocusTraversable(true);
         }
     }
 
     public ChatScreenController() {
-        this.mainVBox = new VBox(2);
-        Image sendImg = new Image("HomeWork_06/ClientSide/resources/send_button.png");
-        sendButton = new Button("   ", new ImageView(sendImg));
+//        this.mainVBox = new VBox(2);
+//        Image sendImg = new Image("HomeWork_06/ClientSide/resources/send_button.png");
+//        sendButton = new Button("   ", new ImageView(sendImg));
     }
 
     public void sendMsg(ActionEvent actionEvent) {
@@ -97,7 +122,7 @@ public class ChatScreenController {
             connect();
         }
         try {
-            outputStream.writeUTF(textField.getText() + "\n");
+            outputStream.writeUTF(textField.getText());
             textField.clear();
             textField.requestFocus();
         } catch (IOException e) {
@@ -136,16 +161,41 @@ public class ChatScreenController {
             e.printStackTrace();
         }
     }
-
-    private void drawMessage(String message) {
+    private void drawAnotherMessage(String message){
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                HBox hBoxMsg = new HBox();
+                hBoxMsg.setAlignment(Pos.CENTER_LEFT);
+                hBoxMsg.setSpacing(15);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+                Label msgLbl = new Label(message);
+                msgLbl.setWrapText(true);
+                Label timeLbl = new Label(dateFormat.format(new Date()));
+                timeLbl.setFont(new Font(10));
+                timeLbl.setTextFill(Color.GRAY);
+                timeLbl.setAlignment(Pos.BOTTOM_RIGHT);
+                hBoxMsg.getChildren().addAll(msgLbl, timeLbl);
+                chatArea.getChildren().add(hBoxMsg);
+            }
+        });
+    }
+    private void drawMyMessage(String message) {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 HBox hBoxMsg = new HBox();
                 hBoxMsg.setAlignment(Pos.CENTER_RIGHT);
-                hBoxMsg.setMinWidth(250);
-                Label label = new Label(message);
-                hBoxMsg.getChildren().add(label);
+                hBoxMsg.setSpacing(15);
+                hBoxMsg.setBackground(new Background(myMessage));
+                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+                Label msgLbl = new Label(message);
+                msgLbl.setWrapText(true);
+                Label timeLbl = new Label(dateFormat.format(new Date()));
+                timeLbl.setFont(new Font(10));
+                timeLbl.setTextFill(Color.GRAY);
+                timeLbl.setAlignment(Pos.BOTTOM_RIGHT);
+                hBoxMsg.getChildren().addAll(msgLbl, timeLbl);
                 chatArea.getChildren().add(hBoxMsg);
             }
         });
@@ -165,7 +215,7 @@ public class ChatScreenController {
                         //Экран авторизации
                         while (true) {
                             String str = inputStream.readUTF();
-                            if (str.startsWith("/authok")) {
+                            if (str.startsWith("#authok")) {
                                 setAuthorized(true);
                                 break;
                             }
@@ -204,28 +254,40 @@ public class ChatScreenController {
                             if (message.startsWith("#newblackpeople")) {
                                 String[] tokens = message.split(" ");
                                 if (tokens[1] != null) {
-                                    drawMessage("<kiki_bot>: " + "user with nickname \"" + tokens[1] + "\" added to blacklist");
+                                    drawMyMessage("<kiki_bot>: " + "user with nickname \"" + tokens[1] + "\" added to blacklist");
                                 }
                                 continue;
                             }
                             if (message.startsWith("#youarenotblack")) {
-                                drawMessage("<kiki_bot>: " + "this user can not be added to blacklist, " +
+                                drawMyMessage("<kiki_bot>: " + "this user can not be added to blacklist, " +
                                         "because it is you are");
                                 continue;
                             }
                             if (message.startsWith("#useralrexblack")) {
                                 String[] tokens = message.split(" ");
                                 if (tokens[1] != null) {
-                                    drawMessage("<kiki_bot>: " + "user with nickname \"" + tokens[1] + "\" already exist in your blacklist");
+                                    drawMyMessage("<kiki_bot>: " + "user with nickname \"" + tokens[1] + "\" already exist in your blacklist");
                                 }
                                 continue;
                             }
                             if (message.startsWith("#mymessage")) {
                                 String[] tokens = message.split(" ", 2);
-                                drawMessage(tokens[1]);
+                                drawMyMessage(tokens[1]);
                                 continue;
                             }
-                            drawMessage(message);
+                            if (message.startsWith("#addcontact")) {
+                                String[] tokens = message.split(" ");
+                                if (tokens[1] != null) {
+                                    Platform.runLater(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            contactBar.getChildren().add(new Label(tokens[1]));
+                                        }
+                                    });
+                                }
+                                continue;
+                            }
+                            drawAnotherMessage(message);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();

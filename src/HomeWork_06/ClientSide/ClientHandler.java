@@ -22,6 +22,7 @@ public class ClientHandler {
     private String login;
     private String nick;
     private LinkedList<String> blacklist; //лист забаненых никнеймов
+    private LinkedList<String> contactList; //лист контактов
 
     DataInputStream inputStream;
     DataOutputStream outputStream;
@@ -33,8 +34,7 @@ public class ClientHandler {
             this.socket = socket;
             this.inputStream = new DataInputStream(socket.getInputStream());
             this.outputStream = new DataOutputStream(socket.getOutputStream());
-            //TODO починить сервис который собирает и передает пользователю блеклист из БД
-
+            this.contactList = new LinkedList<>();
 
             new Thread(new Runnable() {
                 @Override
@@ -53,8 +53,8 @@ public class ClientHandler {
                                         sendMessage("/authalready");
                                         continue;
                                     }
-                                    sendMessage("/authok");
                                     nick = currentNick;
+                                    sendMessage("#authok");
                                     server.subscribe(ClientHandler.this);
                                     break;
                                 }else {
@@ -154,13 +154,19 @@ public class ClientHandler {
         }
         try {
             outputStream.writeUTF("#newblackpeople " + nick);
+            AuthService.updateBlackList(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
         blacklist.add(nick);
     }
 
-    public void addToKontactBar(String nick){
-        sendMessage("#addContact");
+    public LinkedList<String> getContactList() {
+        return contactList;
+    }
+
+    public void addContact(ClientHandler client){
+        contactList.add(client.getNick());
+        sendMessage("#addcontact " + client.getNick());
     }
 }

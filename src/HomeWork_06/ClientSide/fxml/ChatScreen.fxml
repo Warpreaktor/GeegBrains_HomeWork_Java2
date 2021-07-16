@@ -7,16 +7,16 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="mainVBox" alignment="CENTER" minWidth="400.0" styleClass="content" stylesheets="@../css/Design.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="HomeWork_06.ClientSide.Controllers.ChatScreenController">
-   <BorderPane fx:id="chatBorderPane" prefWidth="450.0" snapToPixel="false">
-      <center>
-         <VBox alignment="CENTER" BorderPane.alignment="BOTTOM_CENTER">
+<VBox fx:id="mainVBox" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="800.0" styleClass="content" stylesheets="@../css/Design.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="HomeWork_06.ClientSide.Controllers.ChatScreenController">
+   <HBox alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
+      <children>
+         <VBox fx:id="contactBar" minWidth="100.0" prefWidth="100.0" styleClass="text" />
+         <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
             <children>
-               <VBox fx:id="upperPanel" alignment="CENTER" prefWidth="450.0">
+               <VBox fx:id="upperPanel" alignment="CENTER" VBox.vgrow="ALWAYS">
                   <children>
                      <TextField fx:id="loginField" promptText="login" />
                      <PasswordField fx:id="passwordField" promptText="password" />
@@ -26,18 +26,24 @@
                            <Button fx:id="signUp" mnemonicParsing="false" onAction="#tryAddUser" text="Sign Up" />
                         </children>
                      </HBox>
-                     <Label fx:id="textLabel" prefWidth="450.0" />
+                     <Label fx:id="textLabel" />
                   </children>
                </VBox>
-            </children>
-         </VBox>
-      </center>
-      <bottom>
-         <VBox alignment="BOTTOM_CENTER" BorderPane.alignment="CENTER">
-            <children>
-                <HBox fx:id="bottomPanel" focusTraversable="true" managed="false" visible="false" VBox.vgrow="ALWAYS">
-                    <TextField fx:id="textField" onAction="#sendMsg" promptText="Your message" styleClass="content" stylesheets="@../css/Design.css" HBox.hgrow="ALWAYS" />
-                    <Button fx:id="sendButton" onAction="#sendMsg" prefHeight="40.0" styleClass="content" text="Send" textOverrun="CENTER_ELLIPSIS" />
+               <ScrollPane fx:id="chatPanel" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" pannable="true" visible="false" VBox.vgrow="ALWAYS">
+                 <content>
+                   <AnchorPane blendMode="SRC_ATOP" scaleShape="false">
+                        <children>
+                           <VBox fx:id="chatArea" alignment="CENTER" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                        </children>
+                        <opaqueInsets>
+                           <Insets />
+                        </opaqueInsets>
+                     </AnchorPane>
+                 </content>
+               </ScrollPane>
+                <HBox fx:id="bottomPanel" focusTraversable="true" managed="false" prefHeight="60.0" visible="false">
+                    <TextField fx:id="textField" maxHeight="100.0" minWidth="80.0" onAction="#sendMsg" prefColumnCount="10" promptText="Your message" styleClass="content" stylesheets="@../css/Design.css" HBox.hgrow="ALWAYS" />
+                    <Button fx:id="sendButton" minHeight="60.0" minWidth="60.0" onAction="#sendMsg" styleClass="node" stylesheets="@../css/Design.css" textOverrun="CENTER_ELLIPSIS" />
                   <opaqueInsets>
                      <Insets />
                   </opaqueInsets>
@@ -46,34 +52,8 @@
                   </VBox.margin>
                 </HBox>
             </children>
-            <BorderPane.margin>
-               <Insets />
-            </BorderPane.margin>
          </VBox>
-      </bottom>
-      <top>
-         <VBox fx:id="chatWall" BorderPane.alignment="CENTER">
-            <children>
-               <ScrollPane fx:id="chatPanel" hbarPolicy="NEVER" pannable="true" visible="false">
-                 <content>
-                   <AnchorPane blendMode="SRC_ATOP" minHeight="-Infinity" minWidth="-Infinity" scaleShape="false">
-                        <children>
-                           <VBox fx:id="chatArea" alignment="CENTER" maxWidth="400.0" />
-                        </children>
-                        <opaqueInsets>
-                           <Insets />
-                        </opaqueInsets>
-                     </AnchorPane>
-                 </content>
-               </ScrollPane>
-            </children>
-         </VBox>
-      </top>
-      <left>
-         <VBox fx:id="contactBar" BorderPane.alignment="CENTER" />
-      </left>
-      <right>
-         <VBox BorderPane.alignment="CENTER" />
-      </right>
-   </BorderPane>
+         <VBox minWidth="100.0" prefWidth="100.0" />
+      </children>
+   </HBox>
 </VBox>

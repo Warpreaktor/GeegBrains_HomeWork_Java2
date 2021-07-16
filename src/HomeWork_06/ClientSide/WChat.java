@@ -13,8 +13,11 @@ public class WChat extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("HomeWork_06/ClientSide/fxml/ChatScreen.fxml"));
         primaryStage.setTitle("kIkI");
-        ChatScreenController chatScreenController = new ChatScreenController();
-        primaryStage.setScene(new Scene(root, 300, 475));
+        //ChatScreenController chatScreenController = new ChatScreenController();
+        Scene scene = new Scene(root, 650, 700);
+        primaryStage.setMinHeight(360);
+        primaryStage.setMinWidth(550);
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 

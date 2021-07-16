@@ -22,7 +22,7 @@
                      <Font size="10.0" />
                   </font>
                </TextField>
-               <ListView fx:id="contactPics" focusTraversable="false" opacity="0.21" stylesheets="@../css/Design.css" visible="false" VBox.vgrow="ALWAYS" />
+               <ListView fx:id="contactPics" focusTraversable="false" opacity="0.32" stylesheets="@../css/Design.css" visible="false" VBox.vgrow="ALWAYS" />
             </children>
             <padding>
                <Insets left="1.0" />
@@ -70,7 +70,7 @@
                 </HBox>
             </children>
          </VBox>
-         <VBox minWidth="100.0" prefWidth="100.0" />
+         <VBox minWidth="100.0" prefWidth="100.0" visible="false" />
       </children>
    </HBox>
 </VBox>

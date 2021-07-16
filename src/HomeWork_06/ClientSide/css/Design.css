@@ -1,13 +1,10 @@
-#chatPanel{
-    -fx-background-color: TRANSPARENT;
-}
 
 #contactBar{
     -fx-border-color: GRAY;
 }
 
 #contactPics{
-    -fx-background-color: BLUE;
+    -fx-background-color: BLACK;
 }
 
 #hbox {

@@ -10,7 +10,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import org.w3c.dom.ls.LSOutput;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -72,17 +71,18 @@ public class ChatScreenController {
         this.isAuthorized = authorized;
         this.myMessage = new BackgroundImage(
                 new Image("HomeWork_06/ClientSide/resources/myMessage.png"),
-                BackgroundRepeat.ROUND,
-                BackgroundRepeat.ROUND,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER,
                 BackgroundSize.DEFAULT
         );
-        this.myMessage = new BackgroundImage(
+        this.anotherMessage = new BackgroundImage(
                 new Image("HomeWork_06/ClientSide/resources/anotherMessage.png"),
-                BackgroundRepeat.ROUND,
-                BackgroundRepeat.ROUND,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER,
                 BackgroundSize.DEFAULT
+
         );
 
         this.mainVBox = new VBox(2);
@@ -177,13 +177,17 @@ public class ChatScreenController {
                 HBox hBoxMsg = new HBox();
                 hBoxMsg.setAlignment(Pos.CENTER_LEFT);
                 hBoxMsg.setSpacing(15);
-                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+                hBoxMsg.setBackground(new Background(anotherMessage));
+
                 Label msgLbl = new Label(message);
                 msgLbl.setWrapText(true);
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
                 Label timeLbl = new Label(dateFormat.format(new Date()));
                 timeLbl.setFont(new Font(10));
                 timeLbl.setTextFill(Color.GRAY);
                 timeLbl.setAlignment(Pos.BOTTOM_RIGHT);
+
                 hBoxMsg.getChildren().addAll(msgLbl, timeLbl);
                 chatArea.getChildren().add(hBoxMsg);
             }
@@ -198,13 +202,16 @@ public class ChatScreenController {
                 hBoxMsg.setAlignment(Pos.CENTER_RIGHT);
                 hBoxMsg.setSpacing(15);
                 hBoxMsg.setBackground(new Background(myMessage));
-                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+
                 Label msgLbl = new Label(message);
                 msgLbl.setWrapText(true);
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
                 Label timeLbl = new Label(dateFormat.format(new Date()));
                 timeLbl.setFont(new Font(10));
                 timeLbl.setTextFill(Color.GRAY);
                 timeLbl.setAlignment(Pos.BOTTOM_RIGHT);
+
                 hBoxMsg.getChildren().addAll(msgLbl, timeLbl);
                 chatArea.getChildren().add(hBoxMsg);
             }

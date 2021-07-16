@@ -89,7 +89,6 @@ public class ServerSide {
             if (client.getNick().equals(fromNick)) {
                 client.sendMessage("#mymessage " + msg);
             }else {
-                System.out.println("send = " + msg);
                 client.sendMessage(fromNick + ": " + msg);
             }
         }
@@ -121,4 +120,7 @@ public class ServerSide {
         return false;
     }
 
+    public Vector<ClientHandler> getClients() {
+        return clients;
+    }
 }

@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.w3c.dom.ls.LSOutput;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -22,6 +23,8 @@ public class ChatScreenController {
     //Панель контактов
     @FXML
     VBox contactBar;
+    @FXML
+    ListView contactPics;
 
     //Окно авторизации
     @FXML
@@ -90,6 +93,10 @@ public class ChatScreenController {
             upperPanel.setVisible(false);
             upperPanel.setManaged(false);
 
+            contactPics.setVisible(true);
+            contactPics.setManaged(true);
+            contactBar.setVisible(true);
+            contactBar.setManaged(true);
             chatPanel.setVisible(true);
             chatPanel.setManaged(true);
             chatArea.setVisible(true);
@@ -101,6 +108,10 @@ public class ChatScreenController {
             upperPanel.setVisible(true);
             upperPanel.setManaged(true);
 
+            contactPics.setVisible(false);
+            contactPics.setManaged(false);
+            contactBar.setVisible(false);
+            contactBar.setManaged(false);
             chatPanel.setVisible(false);
             chatPanel.setManaged(false);
             chatArea.setVisible(false);
@@ -179,6 +190,7 @@ public class ChatScreenController {
         });
     }
     private void drawMyMessage(String message) {
+        if (message.hashCode() == 0) return;
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -279,7 +291,7 @@ public class ChatScreenController {
                                     Platform.runLater(new Runnable() {
                                         @Override
                                         public void run() {
-                                            contactBar.getChildren().add(new Label(tokens[1]));
+                                            contactPics.getItems().add(new Label(tokens[1]));
                                         }
                                     });
                                 }

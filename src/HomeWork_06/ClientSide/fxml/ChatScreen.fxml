@@ -3,20 +3,33 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <VBox fx:id="mainVBox" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="800.0" styleClass="content" stylesheets="@../css/Design.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="HomeWork_06.ClientSide.Controllers.ChatScreenController">
    <HBox alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
       <children>
-         <VBox fx:id="contactBar" minWidth="100.0" prefWidth="100.0" styleClass="text">
+         <VBox fx:id="contactBar" minWidth="100.0" prefWidth="100.0" spacing="5.0" styleClass="content" stylesheets="@../css/Design.css" visible="false">
             <children>
-               <TextField onAction="#findUser" promptText="find user" />
+               <TextField onAction="#findUser" promptText="find user">
+                  <font>
+                     <Font size="10.0" />
+                  </font>
+               </TextField>
+               <ListView fx:id="contactPics" focusTraversable="false" opacity="0.21" stylesheets="@../css/Design.css" visible="false" VBox.vgrow="ALWAYS" />
             </children>
+            <padding>
+               <Insets left="1.0" />
+            </padding>
+            <HBox.margin>
+               <Insets />
+            </HBox.margin>
          </VBox>
          <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
             <children>
@@ -45,14 +58,14 @@
                      </AnchorPane>
                  </content>
                </ScrollPane>
-                <HBox fx:id="bottomPanel" focusTraversable="true" managed="false" prefHeight="60.0" visible="false">
+                <HBox fx:id="bottomPanel" focusTraversable="true" managed="false" prefHeight="60.0" visible="false" VBox.vgrow="NEVER">
                     <TextField fx:id="textField" maxHeight="100.0" minWidth="80.0" onAction="#sendMsg" prefColumnCount="10" promptText="Your message" styleClass="content" stylesheets="@../css/Design.css" HBox.hgrow="ALWAYS" />
                     <Button fx:id="sendButton" minHeight="60.0" minWidth="60.0" onAction="#sendMsg" styleClass="node" stylesheets="@../css/Design.css" textOverrun="CENTER_ELLIPSIS" />
                   <opaqueInsets>
                      <Insets />
                   </opaqueInsets>
                   <VBox.margin>
-                     <Insets bottom="40.0" />
+                     <Insets />
                   </VBox.margin>
                 </HBox>
             </children>

@@ -13,7 +13,11 @@
 <VBox fx:id="mainVBox" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="800.0" styleClass="content" stylesheets="@../css/Design.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="HomeWork_06.ClientSide.Controllers.ChatScreenController">
    <HBox alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
       <children>
-         <VBox fx:id="contactBar" minWidth="100.0" prefWidth="100.0" styleClass="text" />
+         <VBox fx:id="contactBar" minWidth="100.0" prefWidth="100.0" styleClass="text">
+            <children>
+               <TextField onAction="#findUser" promptText="find user" />
+            </children>
+         </VBox>
          <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
             <children>
                <VBox fx:id="upperPanel" alignment="CENTER" VBox.vgrow="ALWAYS">

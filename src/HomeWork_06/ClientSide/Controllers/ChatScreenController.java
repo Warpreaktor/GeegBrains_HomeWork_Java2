@@ -111,10 +111,8 @@ public class ChatScreenController {
         }
     }
 
-    public ChatScreenController() {
-//        this.mainVBox = new VBox(2);
-//        Image sendImg = new Image("HomeWork_06/ClientSide/resources/send_button.png");
-//        sendButton = new Button("   ", new ImageView(sendImg));
+    public void findUser() {
+        drawMyMessage("<kiki_bot>: Поиск контактов находится в стадии разработки");
     }
 
     public void sendMsg(ActionEvent actionEvent) {

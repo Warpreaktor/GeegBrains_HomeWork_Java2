@@ -169,4 +169,8 @@ public class ClientHandler {
         contactList.add(client.getNick());
         sendMessage("#addcontact " + client.getNick());
     }
+
+    public void showNick(String nick){
+        sendMessage("#showmynick " + nick);
+    }
 }

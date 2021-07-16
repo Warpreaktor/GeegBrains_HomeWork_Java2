@@ -45,6 +45,7 @@ public class ServerSide {
 
     public void subscribe(ClientHandler client) {
         clients.add(client);
+        client.showNick(client.getNick());
         //Загружаем входящему клиенту всех текущих пользователей чата
         for(ClientHandler cli: clients) {
             if (cli != client) {

@@ -10,6 +10,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
 <VBox fx:id="mainVBox" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="800.0" styleClass="content" stylesheets="@../css/Design.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="HomeWork_06.ClientSide.Controllers.ChatScreenController">
@@ -22,7 +25,7 @@
                      <Font size="10.0" />
                   </font>
                </TextField>
-               <ListView fx:id="contactPics" focusTraversable="false" opacity="0.32" stylesheets="@../css/Design.css" visible="false" VBox.vgrow="ALWAYS" />
+               <ListView fx:id="contactPics" focusTraversable="false" onMouseClicked="#whisper" opacity="0.32" stylesheets="@../css/Design.css" visible="false" VBox.vgrow="ALWAYS" />
             </children>
             <padding>
                <Insets left="1.0" />
@@ -33,6 +36,24 @@
          </VBox>
          <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
             <children>
+               <Label fx:id="myNick">
+                  <textFill>
+                     <LinearGradient cycleMethod="REPEAT" endX="1.0" endY="1.0">
+                        <stops>
+                           <Stop>
+                              <color>
+                                 <Color red="0.41359999775886536" green="0.5888369679450989" blue="0.8799999952316284" />
+                              </color>
+                           </Stop>
+                           <Stop offset="1.0">
+                              <color>
+                                 <Color red="1.0" green="1.0" blue="1.0" />
+                              </color>
+                           </Stop>
+                        </stops>
+                     </LinearGradient>
+                  </textFill>
+               </Label>
                <VBox fx:id="upperPanel" alignment="CENTER" VBox.vgrow="ALWAYS">
                   <children>
                      <TextField fx:id="loginField" promptText="login" />

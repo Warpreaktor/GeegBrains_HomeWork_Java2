@@ -1,7 +1,9 @@
 package HomeWork_06.ClientSide.Controllers;
 
+import HomeWork_06.ClientSide.WChat;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -10,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.WindowEvent;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -23,7 +26,7 @@ public class ChatScreenController {
     @FXML
     VBox contactBar;
     @FXML
-    ListView contactPics;
+    ListView<Label> contactPics;
 
     //Окно авторизации
     @FXML
@@ -47,9 +50,7 @@ public class ChatScreenController {
     @FXML
     VBox chatArea;
     @FXML
-    BorderPane chatBorderPane;
-    @FXML
-    VBox chatWall;
+    Label myNick;
     @FXML
     HBox bottomPanel;
     @FXML
@@ -68,6 +69,17 @@ public class ChatScreenController {
     private boolean isAuthorized;
 
     public void setAuthorized(boolean authorized) {
+        WChat.getStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent windowEvent) {
+                try {
+                    outputStream.writeUTF("#end");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         this.isAuthorized = authorized;
         this.myMessage = new BackgroundImage(
                 new Image("HomeWork_06/ClientSide/resources/myMessage.png"),
@@ -164,6 +176,7 @@ public class ChatScreenController {
             //TODO Сделать нормальную форму аутентификации, чтобы пользователь мог ввести и свой ник нейм
             //Повторяется логин для того чтобы в базу данных записать и ник который будет равен логину
             outputStream.writeUTF("#addUser " + loginField.getText() + " " + passwordField.getText() + " " + loginField.getText());
+            myNick.setText(loginField.getText());
             loginField.clear();
             passwordField.clear();
         } catch (IOException e) {
@@ -217,6 +230,20 @@ public class ChatScreenController {
             }
         });
     }
+
+    public void whisper(){
+        String nick = contactPics.getSelectionModel().getSelectedItem().getText();
+        textField.setText("@" + nick + " ");
+    }
+
+    public void getCloseEvent(){
+        try {
+            outputStream.writeUTF("/end");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     //Происходит перед попыткой пользователя авторизоваться
     public void connect() {
@@ -322,4 +349,5 @@ public class ChatScreenController {
             e.printStackTrace();
         }
     }
+
 }
